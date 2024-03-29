@@ -7,9 +7,16 @@ import { notes } from "./notes";
 
 function App() {
   const [notesArray, setNotesArray] = useState(notes);
+
   const addNote = (newNote) => {
-    setNotesArray((prevNotes) => {
-      return [...prevNotes, newNote];
+    setNotesArray(prevNotes => {
+      return [...prevNotes, { ...newNote, key: Date.now() }];
+    });
+  };
+
+  const deleteNote = (id) => {
+    setNotesArray(prevNotes => {
+      return prevNotes.filter(noteItem => noteItem.key !== id);
     });
   };
 
@@ -17,12 +24,13 @@ function App() {
     <div>
       <Header />
       <CreateNote onAdd={addNote} />
-      {notesArray.map((noteItem) => (
+      {notesArray.map(noteItem => (
         <Note
           key={noteItem.key}
           id={noteItem.key}
           title={noteItem.title}
           content={noteItem.content}
+          onDelete={deleteNote}
         />
       ))}
       <Footer />
